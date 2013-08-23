@@ -1,0 +1,62 @@
+<html>	
+	<head>		
+		<title>SVG Data</title>		
+		<script src="http://d3js.org/d3.v3.min.js"></script>
+		<script>
+				// D3.js has a pretty awesome color system 
+				// https://github.com/mbostock/d3/wiki/Ordinal-Scales#wiki-category10
+				var color = d3.scale.category10();
+				var circleData = [4, 8, 15, 16, 23, 30];
+				var vis;	
+				
+			function makeViz() {
+			
+				vis = d3.select("div#visualization_here").append("svg:svg")
+					.attr("width", "400")
+					.attr("height", "400");
+					
+				// 	Update circle object with new data
+				newCircles = vis.selectAll("circle").data(circleData);
+	
+				// Enter/Append, but this time with more space in between and color
+				newCircles.enter().append("circle")
+					.attr("cx", function(d) { return d*10; })
+					.attr("cy", function(d) { return d*10; })
+					.attr("r", function(d) { return d; })
+					.style("fill", function(d) { return color(d); });
+			}
+			
+			///////////////////////////////////////////
+			/* Pushing the button will activate this */
+			///////////////////////////////////////////
+			function changeNodes() {
+				var onlyTheEvens = circleData
+					.filter(function(d) { 
+							if (d%2 == 0) { 
+								return d;
+							} 
+					});		
+				
+				// Remember, use this line if you want to compare just on the SIZE of the array
+				//newerCircles = vis.selectAll("circle").data(onlyTheEvens);
+				
+				// BUT! if you want to compare based on value, you have to specifically say this. 
+				newerCircles = vis.selectAll("circle").data(onlyTheEvens);
+				
+				// Enter (if more data is present)
+				newerCircles.enter().append("circle")
+					.attr("cx", function(d) { return d*10; })
+					.attr("cy", function(d) { return d*10; })
+					.attr("r", function(d) { return d; })
+					.style("fill", function(d) { return color(d); });
+				
+				// Exit (if less data is present)
+				newerCircles.exit().remove();
+			}			
+		</script>		
+	</head>		
+	<body onload="makeViz()">		
+		<div id="visualization_here"></div>	
+		<button type="button" onclick="changeNodes()">Click Me!</button>
+	</body>
+</html>
