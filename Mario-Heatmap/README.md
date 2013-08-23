@@ -10,9 +10,11 @@ marioWalking2.csv
 marioWalking3.csv
 
 Example 1 - standing.html
+
 Introduction into creating 3 layers for a heat-map, which when visualized will feature Mario
 
 Example 2 - standing2.html
+
 Puts all 3 layers into a single matrix/vector
 
 Example 3 - standing3.html
