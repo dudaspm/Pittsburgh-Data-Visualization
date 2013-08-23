@@ -1,8 +1,12 @@
 This is a type of heat-map which was focused on creating an "8-bit" rendering of Mario. 
 Files needed for these examples include:
-marioStanding.csv
+
+marioStanding.csv 
+
 marioWalking1.csv
+
 marioWalking2.csv
+
 marioWalking3.csv
 
 Example 1 - standing.html
