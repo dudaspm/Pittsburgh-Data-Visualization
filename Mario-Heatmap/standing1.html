@@ -1,9 +1,8 @@
- <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Heat-map?</title>
     <script src="../d3/d3.min.js"></script>
-
 </head>
 
 <body>
@@ -14,12 +13,14 @@
 	var pixelWidth = width/16;
 	var pixelHeight = height/16;
 	
+	// create the viewbox for the SVG
 	var vis = d3.select("div#standing").append("svg")
 		.attr("width", width)
 		.attr("height", height)
 		.style("border-width", "2px")
 		.style("border-style", "solid");	
 	
+	// first layer, red
 	var redM = [];
 	var redPixels = [];
 	redM.push(0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0)
@@ -40,8 +41,12 @@
 	redM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
 	redM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 		
+	// get the indices of the position where the value = 1
 	redM.forEach(function(d,i){ d ? redPixels.push(i) : null });  
 
+	// append the red layer
+	// x is the: index % 16 (number of pixels specified above) 
+	// y is the: floor (index / 16 (number of pixels specified above))
 	vis.selectAll("rect.red").data(redPixels).enter().append("rect")
 		.attr("class", "red")
 		.attr("x", function(d,i) { return pixelWidth*(d%16); })
@@ -50,6 +55,7 @@
 		.attr("height", pixelHeight)
 		.style("fill", "#F40000");
 		
+	// second layer, brown	
 	var brownM = [];
 	var brownPixels = [];
 	brownM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
@@ -69,16 +75,21 @@
 	brownM.push(0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0)
 	brownM.push(0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0);
 		
-	brownM.forEach(function(d,i){ console.log(d,i); d ? brownPixels.push(i) : null });  
+	// get the indices of the position where the value = 1	
+	brownM.forEach(function(d,i){ d ? brownPixels.push(i) : null });  
 
+	// append the brown layer
+	// x is the: index % 16 (number of pixels specified above) 
+	// y is the: floor (index / 16 (number of pixels specified above))	
 	vis.selectAll("rect.brown").data(brownPixels).enter().append("rect")
 		.attr("class", "brown")
-		.attr("x", function(d,i) { console.log(d%16); return pixelWidth*(d%16); })
-		.attr("y", function(d,i) {  console.log(Math.floor(d/16)); return pixelWidth*Math.floor(d/16); })
+		.attr("x", function(d,i) { return pixelWidth*(d%16); })
+		.attr("y", function(d,i) { return pixelWidth*Math.floor(d/16); })
 		.attr("width", pixelWidth)
 		.attr("height", pixelHeight)
 		.style("fill", "#806000");	
 
+	// last layer, peach		
 	var peachM = [];
 	var peachPixels = [];
 	peachM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
@@ -96,13 +107,17 @@
 	peachM.push(0,0,1,1,0,0,0,0,0,0,0,0,1,1,0,0)
 	peachM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
 	peachM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-		
-	peachM.forEach(function(d,i){ console.log(d,i); d ? peachPixels.push(i) : null });  
+	
+	// get the indices of the position where the value = 1	
+	peachM.forEach(function(d,i){ d ? peachPixels.push(i) : null });  
 
+	// append the peach layer
+	// x is the: index % 16 (number of pixels specified above) 
+	// y is the: floor (index / 16 (number of pixels specified above))	
 	vis.selectAll("rect.peach").data(peachPixels).enter().append("rect")
 		.attr("class", "peach")
-		.attr("x", function(d,i) { console.log(d%16); return pixelWidth*(d%16); })
-		.attr("y", function(d,i) {  console.log(Math.floor(d/16)); return pixelWidth*Math.floor(d/16); })
+		.attr("x", function(d,i) { return pixelWidth*(d%16); })
+		.attr("y", function(d,i) { return pixelWidth*Math.floor(d/16); })
 		.attr("width", pixelWidth)
 		.attr("height", pixelHeight)
 		.style("fill", "#F8C080");
