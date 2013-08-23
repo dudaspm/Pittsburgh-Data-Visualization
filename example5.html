@@ -1,0 +1,33 @@
+<html>	
+	<head>		
+		<title>2 x Polygons</title>		
+		<script src="http://d3js.org/d3.v3.min.js"></script>
+		<script>
+			function makeViz() {
+				// First select where on the document (webpage) where you want the SVG object (store as: vis)
+				var vis = d3.selectAll("div#visualization_here")
+				
+				// Append the SVG container or the root
+				var SVG_container = vis.append("svg:svg")
+					.attr("width", "400")
+					.attr("height", "400");
+					
+				// Now just append the polygon to SVG container or root	
+				SVG_container.append("polygon")
+					.attr("points", "200,10 250,190 160,210")
+					.style("fill", "lime")
+					.style("stroke", "purple")
+					.style("stroke-width", "1px");
+					
+				// You should see the exactly same polygons //
+			}
+		</script>		
+	</head>		
+	<body onload="makeViz()">		
+		<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="400px" height="400px">
+			<polygon points="200,10 250,190 160,210" style="fill:lime;stroke:purple;stroke-width:1"/>
+		</svg>
+		
+		<div id="visualization_here"></div>	
+	</body>
+</html>
