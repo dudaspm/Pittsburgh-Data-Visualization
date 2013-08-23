@@ -8,6 +8,7 @@ Example  5) Duplicate polygons 1) as SVG and 2) as D3.js
 Data time! 
 D3.js runs off this idea of “update”, “enter”, and “exit”.
 Update is needed for both Enter and Exit. Basically it updates your SVG object with new data. 
+
 Example 6) This shows how to apply the data to SVG Circle. At this point, looks pretty ugly. CSS to the rescue!
 
 Example 7) 
