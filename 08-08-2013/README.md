@@ -14,4 +14,4 @@ Example 8b) So Franklin brought up an interesting question and I was unable to c
 
 Example 9) At this point, we know how to update, enter, and exit, but the visualization should transition from one state to another. This is huge topic in visualizations called change blindness (http://www2.psych.ubc.ca/~rensink/flicker/).
 
-Example 10) Lastly, let’s attach a few affordances. So users know they can select (in this case, rectangles). The user will see both a cursor and the object will change with mouse-over and mouse-out events.
+Example 10) Lastly, let’s attach a few affordances. So users know they can select circles. The user will see both a cursor and the object will change with mouse-over and mouse-out events. Also, once selected, the object will be removed. Finally, once all circles are gone, redraw with delay. 
