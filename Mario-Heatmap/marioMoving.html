@@ -1,0 +1,89 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Mario</title>
+    <script src="../d3/d3.min.js"></script>
+	<script src="marioMoves.js"></script>
+	<script type="text/javascript">
+		var vis;
+		var marioAnimate = [];
+		var width = 300, height = 300; 
+		var pixelWidth = width/16;
+		var pixelHeight = height/16;	
+		var marioColors = ["white","#F40000","#806000","#F8C080"];	
+		
+	</script>
+</head>
+
+<body onload="getStanding();">
+<div id="standing"></div>
+	<script type="text/javascript">
+	
+	/*////////////////////////////////////////////////*/
+	/* Note the additional JS library (marioMoves.js) */
+	/*////////////////////////////////////////////////*/
+	
+	function createMario() {
+		// create the viewbox for the SVG
+		vis = d3.select("div#standing").append("svg")
+			.attr("width", width)
+			.attr("height", height)
+			.style("border-width", "2px")
+			.style("border-style", "solid");	
+
+		// append all layers
+		// x is the: index % 16 (number of pixels specified above) 
+		// y is the: floor (index / 16 (number of pixels specified above)
+		// this uses multidimensional array, hence the d[0][0] which means getStanding() data, location of the index
+		vis.selectAll("rect").data(marioAnimate).enter().append("rect")
+			.attr("x", function(d,i) {console.log(d); return pixelWidth*(d[0][0]%16); })
+			.attr("y", function(d,i) { return pixelWidth*Math.floor(d[0][0]/16); })
+			.attr("width", pixelWidth)
+			.attr("height", pixelHeight)
+			.style("fill", function(d,i) { return marioColors[d[0][1]]; })
+			.on("click", function() { return changeScene() });	
+			
+		function changeScene() {
+			// chaining transitions
+			// the idea is to move from standing - > walking1 -> walking2 -> walking3 and so on
+			// using the chaining allows for all transitions to complete
+			var t0 = vis.transition().ease('quad-in').selectAll("rect");
+			t0.style("fill", function(d,i) { return marioColors[d[1][1]]; });	
+
+			var t1 = t0.transition();
+			t1.style("fill", function(d,i) { return marioColors[d[2][1]]; });	
+			
+			var t2 = t1.transition();
+			t2.style("fill", function(d,i) { return marioColors[d[3][1]]; });	
+			
+			var t3 = t2.transition()
+			t3.style("fill", function(d,i) { return marioColors[d[1][1]]; });		
+			
+			var t4 = t3.transition()
+			t4.style("fill", function(d,i) { return marioColors[d[2][1]]; });		
+			
+			var t5 = t4.transition();
+			t5.style("fill", function(d,i) { return marioColors[d[3][1]]; });		
+			
+			var t6 = t5.transition()
+			t6.style("fill", function(d,i) { return marioColors[d[1][1]]; });		
+			
+			var t7 = t6.transition()
+			t7.style("fill", function(d,i) { return marioColors[d[2][1]]; });		
+			
+			var t8 = t7.transition();
+			t8.style("fill", function(d,i) { return marioColors[d[3][1]]; });	
+
+			var t9 = t8.transition();
+			t9.style("fill", function(d,i) { return marioColors[d[0][1]]; });		
+			
+			
+		}
+			
+	}
+	
+</script>
+</body>
+
+</html>
+
