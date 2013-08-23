@@ -1,0 +1,116 @@
+ <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Heat-map?</title>
+    <script src="../d3/d3.min.js"></script>
+
+</head>
+
+<body>
+<div id="standing"></div>
+
+<script type="text/javascript">
+	var width = 300, height = 300; 
+	var pixelWidth = width/16;
+	var pixelHeight = height/16;
+	
+	var vis = d3.select("div#standing").append("svg")
+		.attr("width", width)
+		.attr("height", height)
+		.style("border-width", "2px")
+		.style("border-style", "solid");	
+	
+	var redM = [];
+	var redPixels = [];
+	redM.push(0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,0)
+	redM.push(0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0)
+	redM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+	redM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+	redM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+	redM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+	redM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+	redM.push(0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0)
+	redM.push(0,0,0,0,0,0,1,0,0,1,0,0,0,0,0,0)
+	redM.push(0,0,0,0,0,0,1,1,1,1,0,0,0,0,0,0)
+	redM.push(0,0,0,0,0,1,0,1,1,0,1,0,0,0,0,0)
+	redM.push(0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0)
+	redM.push(0,0,0,0,1,1,1,1,1,1,1,1,0,0,0,0)
+	redM.push(0,0,0,0,1,1,1,0,0,1,1,1,0,0,0,0)
+	redM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+	redM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+	redM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+		
+	redM.forEach(function(d,i){ d ? redPixels.push(i) : null });  
+
+	vis.selectAll("rect.red").data(redPixels).enter().append("rect")
+		.attr("class", "red")
+		.attr("x", function(d,i) { return pixelWidth*(d%16); })
+		.attr("y", function(d,i) { return pixelWidth*Math.floor(d/16); })
+		.attr("width", pixelWidth)
+		.attr("height", pixelHeight)
+		.style("fill", "#F40000");
+		
+	var brownM = [];
+	var brownPixels = [];
+	brownM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+	brownM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+	brownM.push(0,0,0,0,1,1,1,0,0,1,0,0,0,0,0,0)
+	brownM.push(0,0,0,1,0,1,0,0,0,1,0,0,0,0,0,0)
+	brownM.push(0,0,0,1,0,1,1,0,0,0,1,0,0,0,0,0)
+	brownM.push(0,0,0,1,1,0,0,0,0,1,1,1,1,0,0,0)
+	brownM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+	brownM.push(0,0,0,0,1,1,0,1,1,0,1,1,0,0,0,0)
+	brownM.push(0,0,0,1,1,1,0,1,1,0,1,1,1,0,0,0)
+	brownM.push(0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0)
+	brownM.push(0,0,0,0,1,0,0,0,0,0,0,1,0,0,0,0)
+	brownM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+	brownM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+	brownM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+	brownM.push(0,0,0,1,1,1,0,0,0,0,1,1,1,0,0,0)
+	brownM.push(0,0,1,1,1,1,0,0,0,0,1,1,1,1,0,0);
+		
+	brownM.forEach(function(d,i){ console.log(d,i); d ? brownPixels.push(i) : null });  
+
+	vis.selectAll("rect.brown").data(brownPixels).enter().append("rect")
+		.attr("class", "brown")
+		.attr("x", function(d,i) { console.log(d%16); return pixelWidth*(d%16); })
+		.attr("y", function(d,i) {  console.log(Math.floor(d/16)); return pixelWidth*Math.floor(d/16); })
+		.attr("width", pixelWidth)
+		.attr("height", pixelHeight)
+		.style("fill", "#806000");	
+
+	var peachM = [];
+	var peachPixels = [];
+	peachM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+	peachM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+	peachM.push(0,0,0,0,0,0,0,1,1,0,1,0,0,0,0,0)
+	peachM.push(0,0,0,0,1,0,1,1,1,0,1,1,1,0,0,0)
+	peachM.push(0,0,0,0,1,0,0,1,1,1,0,1,1,1,0,0)
+	peachM.push(0,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0)
+	peachM.push(0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,0)
+	peachM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+	peachM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+	peachM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+	peachM.push(0,0,1,1,0,0,1,0,0,1,0,0,1,1,0,0)
+	peachM.push(0,0,1,1,1,0,0,0,0,0,0,1,1,1,0,0)
+	peachM.push(0,0,1,1,0,0,0,0,0,0,0,0,1,1,0,0)
+	peachM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+	peachM.push(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+		
+	peachM.forEach(function(d,i){ console.log(d,i); d ? peachPixels.push(i) : null });  
+
+	vis.selectAll("rect.peach").data(peachPixels).enter().append("rect")
+		.attr("class", "peach")
+		.attr("x", function(d,i) { console.log(d%16); return pixelWidth*(d%16); })
+		.attr("y", function(d,i) {  console.log(Math.floor(d/16)); return pixelWidth*Math.floor(d/16); })
+		.attr("width", pixelWidth)
+		.attr("height", pixelHeight)
+		.style("fill", "#F8C080");
+		
+	
+		
+</script>
+</body>
+
+</html>
+
