@@ -1,0 +1,59 @@
+<html>	
+	<head>		
+		<title>SVG Data</title>		
+		<script src="http://d3js.org/d3.v3.min.js"></script>
+		<script>
+				var color = d3.scale.category10();
+				var circleData = [4, 8, 15, 16, 23, 30];
+				var vis;	
+				
+			function makeViz() {
+
+				vis = d3.select("div#visualization_here").append("svg:svg")
+					.attr("id", "SVGDisplay")
+					.attr("width", "400")
+					.attr("height", "400");
+					
+				//update	
+				newCircles = vis.selectAll("circle").data(circleData);
+	
+				//enter
+				newCircles.enter().append("circle")
+					.attr("id", function(d,i) { return "circle"+i; })
+					.attr("cx", function(d) { return d*10; })
+					.attr("cy", function(d) { return d*10; })
+					.attr("r", function(d) { return d; })
+					.style("fill", function(d) { return color(d); })
+					// Mistake 2) mouse events should be tied to the data, not known a priori 
+					.on("click", function() { if (d%2 == 0) { changeNodes(); } });
+					
+				// Mistake 1) IDs and Classes can't start with a number. 
+				nodeToClick = d3.select("circle#circle1").on("click", function() { changeNodes(); });
+
+			}
+			
+			function changeNodes() {
+				var onlyTheEvens = circleData
+					.filter(function(d) { 
+							if (d%2 == 0) { 
+								return d;
+							} 
+					});					
+				newerCircles = vis.selectAll("circle").data(onlyTheEvens,function(d) { return d });
+
+				// Enter (if more data is present)
+				newerCircles.enter().append("circle")
+					.attr("cx", function(d) { return d*10; })
+					.attr("cy", function(d) { return d*10; })
+					.attr("r", function(d) { return d; })
+					.style("fill", function(d) { return color(d); });
+				
+				// Exit (if less data is present)
+				newerCircles.exit().remove();
+			}			
+		</script>		
+	</head>		
+	<body onload="makeViz()">		
+		<div id="visualization_here"></div>	
+	</body>
+</html>
