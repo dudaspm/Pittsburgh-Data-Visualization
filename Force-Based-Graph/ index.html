@@ -57,7 +57,7 @@
 			node.append("title")
 				.text(function(d) { return d.name; });
 			
-			// this is main mechanism of the force based diagram
+			// this is the main mechanism of the force based diagram
 			// which moves the nodes and links from their starting and finishing positions
 			// once it hits equilibrium, it will stop moving the positions
 			force.on("tick", function() {
