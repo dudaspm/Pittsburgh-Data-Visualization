@@ -130,21 +130,22 @@
 			.attr("y", function(d) { return h - yScale(d); })
 //			.text(function(d) { return d; })
 		//set new position based on xScale
-		.attr("width", xScale.rangeBand() / 2)     
+			.attr("width", xScale.rangeBand() / 2)     
 		 //set new height based on yScale
-		.attr("height", function(d) { return yScale(d); })
+			.attr("height", function(d) { return yScale(d); })
+			.text(function(d) { return d; });
 ////////////////////////////////////////////////
 //////////////// to here ///////////////////////
 ////////////////////////////////////////////////
-		.transition()
-		.duration(500)
-		.text(function(d) { return d; })
-		.attr("text-anchor", "middle")
-		.attr("x", function(d, i) { return xScale(i) + xScale.rangeBand() / 2; })
-		.attr("y", function(d) { return h - yScale(d) + 14; })
-		.attr("font-family", "sans-serif")
-		.attr("font-size", "11px")
-		.attr("fill", "white");
+		svg.selectAll("text")		
+			.transition()
+			.duration(500)
+			.attr("text-anchor", "middle")
+			.attr("x", function(d, i) { return xScale(i) + xScale.rangeBand() / 2; })
+			.attr("y", function(d) { return h - yScale(d) + 14; })
+			.attr("font-family", "sans-serif")
+			.attr("font-size", "11px")
+			.attr("fill", "white");
 
     });
 </script>
