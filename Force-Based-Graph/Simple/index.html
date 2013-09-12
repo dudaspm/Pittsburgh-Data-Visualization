@@ -28,7 +28,7 @@
 
 		// this container is used to open, retrieve, and process a JSON document
 		// basically you need all data related items in this container
-		d3.json("miserables.json", function(error, graph) {
+		d3.json("../miserables.json", function(error, graph) {
 			// this actually adheres the data to the force base layout and starts the layout
 			force
 				.nodes(graph.nodes)
