@@ -1,4 +1,4 @@
-import oauth2 as oauth
+import oauth2 as oauth # you need to install https://github.com/simplegeo/python-oauth2
 
 consumerKey = "SXYrbPmwFJcx02GDdndVOQ"
 consumerSecret = "VTGjzS4sl1T8DC69RrSVq5ThvyXJy59PiM3cIpC3FzM"
