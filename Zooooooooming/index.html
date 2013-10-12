@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Zooooooooming</title>
+		<script src="http://d3js.org/d3.v3.min.js"></script>
+		<script>
+		function getJSON() 	{
+			var script  = document.createElement('script');
+			script.src  = 'http://www.json.org/json2.js';
+			script.type = 'text/javascript';
+			script.defer = true;
+			if (window.XMLHttpRequest) {
+				xmlhttp=new XMLHttpRequest();
+			}
+			else {
+				xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			xmlhttp.onreadystatechange=function() {
+				if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+					var JSONtext  = new Object;
+					JSONtext  = xmlhttp.responseText;
+					var graph = JSON.parse(JSONtext);
+					createGraphs(graph);
+				}
+			}
+			xmlhttp.open("GET","http://www.boxnumbertwo.com/D3Simple/zoooooooom/JSON/miserables.json",true);
+			xmlhttp.send();
+		}
+		</script>
+	</head>	
+	<body onload="getJSON()">
+	<script>
+	function createGraphs(graph) {
+		var width = 960, height = 500;
+		
+		// add the Zoom behavior
+		var zoom = d3.behavior.zoom();
+		
+		var color = d3.scale.category20();
+
+		var force = d3.layout.force()
+			.charge(-120)
+			.linkDistance(30)
+			.size([width, height]);
+
+		var svg = d3.select("body").append("svg")
+			.attr("width", width)
+			.attr("height", height)
+		// you need to add a layer to actually do the zooming
+			.call(zoom.on("zoom", zooming))
+				.append("svg:g")
+				.attr("id", "ZoomLayer");			
+
+		// the actual function that will do the zooming
+		// putting a transition and duration makes this zooming a bit smoother
+		function zooming() {
+			svg
+				.transition()
+				.duration(1500)
+				.attr("transform", "translate(" + d3.event.translate + ")" + "scale(" + d3.event.scale + ")");
+		}		
+
+		force
+			.nodes(graph.nodes)
+			.links(graph.links)
+			.start();
+
+		var link = svg.selectAll(".link")
+			.data(graph.links)
+			.enter().append("line")
+			.attr("class", "link")
+			.style("stroke", "#999")
+			.style("stroke-opacity", .6)
+			.style("stroke-width", function(d) { return Math.sqrt(d.value); });
+
+		var node = svg.selectAll(".node")
+			.data(graph.nodes)
+			.enter().append("circle")
+			.attr("class", "node")
+			.attr("r", 5)
+			.style("fill", function(d) { return color(d.group); })
+			.style("stroke", "#fff")
+			.style("stroke-width", "1.5px")
+			.call(force.drag);
+
+		node.append("title")
+			.text(function(d) { return d.name; });
+
+		force.on("tick", function() {
+			link.attr("x1", function(d) { return d.source.x; })
+				.attr("y1", function(d) { return d.source.y; })
+				.attr("x2", function(d) { return d.target.x; })
+				.attr("y2", function(d) { return d.target.y; });
+
+			node.attr("cx", function(d) { return d.x; })
+				.attr("cy", function(d) { return d.y; });
+		});
+	}
+	</script>
+	</body>
+</html>
