@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<meta charset="utf-8">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+	<title>UK Map</title>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+	<script src="http://d3js.org/topojson.v1.min.js"></script>
+	
+	<style>
+		/* Refers to the class of each of my objects, check out http://www.w3schools.com/css/css_id_class.asp for more info */
+		.subunit-boundary {
+			fill: none;
+			stroke: #777;
+			stroke-dasharray: 2,2;
+			stroke-linejoin: round;
+		}
+
+		.subunit-boundary.IRL {
+			stroke: #aaa;
+		}
+		
+		.subunit-label {
+			fill: #777;
+			fill-opacity: .5;
+			font-size: 20px;
+			font-weight: 300;
+			text-anchor: middle;
+		}		
+
+		.subunit.Scotland { fill: #ddc; }
+		.subunit.Wales { fill: #cdd; }
+		.subunit.N_Ireland { fill: #cdc; }
+		.subunit.England { fill: #dcd; }
+		.subunit.Ireland { display: none; }			
+	</style>	
+</head>
+
+<body>
+
+	<script>
+	var width = 960, height = 1160;
+	// add the Zoom behavior
+	var zoom = d3.behavior.zoom();
+	var svg = d3.select("body").append("svg")
+		.attr("width", width)
+		.attr("height", height) 
+		// you need to add a layer to actually do the zooming
+		.call(zoom.on("zoom", zooming))
+			.append("svg:g")
+			.attr("id", "ZoomLayer");
+		
+	// The actual zoom function that will do the zooming
+	// putting a transition and duration makes this zooming a bit smoother		
+	function zooming() {
+		svg
+			.transition()
+			.duration(1500)
+			.attr("transform", "translate(" + d3.event.translate + ")" + "scale(" + d3.event.scale + ")");
+	}				
+				
+	// Considering the world is spheroid and maps are flat. 
+	// We need a way to transcribe or project the earth onto a 2D plot
+	// Check out https://github.com/mbostock/d3/wiki/Geo-Projections for more details
+	// Check http://egsc.usgs.gov/isb//pubs/MapProjections/projections.html for general info about projections
+	var projection = d3.geo.albers()
+		// Refers to the latitude of the UK
+		.center([0, 55.4])
+		// Refers to the longitude of the UK
+		.rotate([4.4, 0])
+		// Check out USGS for parallels for selected locations
+		.parallels([50, 60])
+		// https://github.com/mbostock/d3/wiki/Geo-Projections#wiki-scale
+		.scale(6000)
+		// https://github.com/mbostock/d3/wiki/Geo-Projections#wiki-translate
+		.translate([width / 2, height / 2]);				
+			
+	// Once you finish with the projection, append it to your geo.path		
+	var path = d3.geo.path().projection(projection);	
+	
+	// Reads a JSON file "uk.json"
+	d3.json("uk.json", function(error, uk) {
+		// Basically defines each country that makes up the UK
+		// See .subunit.COUNTRY in the CSS
+		svg.selectAll(".subunit")
+			// Check out https://github.com/mbostock/topojson/wiki/API-Reference#wiki-feature
+			.data(topojson.feature(uk, uk.objects.subunits).features)
+			.enter().append("path")
+				// d.properties.name would work fine, but wanted to make sure there were no addition "." to mess up the css
+				.attr("class", function(d) { return "subunit " + d.properties.name.replace(". ","_"); })
+				.attr("d", path);			
+		
+		// Now to add boundaries around each country
+		// Use mesh for this (https://github.com/mbostock/topojson/wiki/API-Reference#wiki-mesh)
+		// Great example here: http://bl.ocks.org/mbostock/4180634
+		svg.append("path")
+			// Check out http://stackoverflow.com/questions/10086167/d3-how-to-deal-with-json-data-structures for the differences between data and datum
+			.datum(topojson.mesh(uk, uk.objects.subunits, function(a, b) { return a !== b && a.properties.name.replace(". ","_") !== "Ireland"; }))
+			.attr("d", path)
+			.attr("class", "subunit-boundary");
+			
+		svg.append("path")
+			// Check out http://stackoverflow.com/questions/10086167/d3-how-to-deal-with-json-data-structures for the differences between data and datum		
+			.datum(topojson.mesh(uk, uk.objects.subunits, function(a, b) { return a === b && a.properties.name.replace(". ","_") === "Ireland"; }))
+			.attr("d", path)
+			.attr("class", "subunit-boundary IRL");		
+
+		// Adds a label (text) for each country
+		svg.selectAll(".subunit-label")
+			.data(topojson.feature(uk, uk.objects.subunits).features)
+			.enter().append("text")
+			.attr("class", function(d) { return "subunit-label " + d.id; })
+			// path.centroid is exactly that, finds the center of each path (country)
+			.attr("transform", function(d) { return "translate(" + path.centroid(d) + ")"; })
+			.attr("dy", ".35em")
+			.text(function(d) { return d.properties.name; });				
+	
+		// Adds a marker for each location (cities)
+		svg.append("path")
+			.datum(topojson.feature(uk, uk.objects.places))
+			.attr("d", path)
+			.attr("class", "place");	
+		
+		// Adds a label (text) for each city		
+		svg.selectAll(".place-label")
+			.data(topojson.feature(uk, uk.objects.places).features)
+			.enter().append("text")
+			.attr("class", "place-label")
+			.attr("transform", function(d) { return "translate(" + projection(d.geometry.coordinates) + ")"; })
+			.attr("x", function(d) { return console.log(d); d.geometry.coordinates[0] > -1 ? 6 : -6; })
+			.attr("dy", ".35em")
+			.style("font-size", "10px")
+			.style("text-anchor", function(d) { return d.geometry.coordinates[0] > -1 ? "start" : "end"; })
+			// There are some zooming issues with Chrome
+			// Using text-rendering helps alleviate this to a degree
+			//.style("text-rendering","geometricPrecision")
+			.text(function(d) { return d.properties.name; });	
+
+	});
+	</script>
+</body>
+</html>
