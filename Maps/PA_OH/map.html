@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<meta charset="utf-8">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+	<title>PA/OH Map</title>
+	<script src="http://d3js.org/d3.v3.min.js"></script>
+
+</head>
+	<style>
+		.subunit-boundary {
+			fill: none;
+			stroke: #777;
+			stroke-dasharray: 2,2;
+			stroke-linejoin: round;
+		}
+	</style>	
+<body>
+
+	<script>
+	var width = 900, height = 700;
+	// add the Zoom behavior
+	var zoom = d3.behavior.zoom();
+	var svg = d3.select("body").append("svg")
+		.attr("width", width)
+		.attr("height", height) 
+		// you need to add a layer to actually do the zooming
+		.call(zoom.on("zoom", zooming))
+			.append("svg:g")
+			.attr("id", "ZoomLayer");
+		
+	// The actual zoom function that will do the zooming
+	// putting a transition and duration makes this zooming a bit smoother		
+	function zooming() {
+		svg
+			.transition()
+			.duration(1500)
+			.attr("transform", "translate(" + d3.event.translate + ")" + "scale(" + d3.event.scale + ")");
+	}				
+				
+	// Considering the world is spheroid and maps are flat. 
+	// We need a way to transcribe or project the earth onto a 2D plot
+	// Check out https://github.com/mbostock/d3/wiki/Geo-Projections for more details
+	// Check http://egsc.usgs.gov/isb//pubs/MapProjections/projections.html for general info about projections
+	var projection = d3.geo.albers()
+		// https://github.com/mbostock/d3/wiki/Geo-Projections#wiki-translate
+		.translate([width / 2, height / 2]) 
+		// https://github.com/mbostock/d3/wiki/Geo-Projections#wiki-scale
+		.scale(400000) 
+		// Refers to the longitude of the Pittsburgh
+		.center([0, 40.4417]) 		
+		// Refers to the latitude of the Pittsburgh
+		.rotate([80.0000, 0]);
+		
+	// Once you finish with the projection, append it to your geo.path	
+	var path = d3.geo.path().projection(projection);		
+	// Reads a JSON file "ReducedRadiusPAOH.json"
+	d3.json("ReducedRadiusPAOH.json", function(error, PA_OH) {
+		// Basically defines each neighborhood that makes up the Pittsburgh
+		// See .subunit.neighborhood in the CSS	
+		svg.selectAll(".subunit")
+			.data(PA_OH.features)
+			.enter().append("path")
+				.attr("d", path);		
+
+		// Now to add boundaries around each neighborhood
+		svg.append("path")
+			.datum(PA_OH)
+			.attr("d", path)
+			.attr("class", "subunit-boundary");
+	
+				
+	});
+	</script>
+</body>
+</html>
