@@ -1,0 +1,44 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Force Based Graph</title>
+		<script src="http://d3js.org/d3.v3.min.js"></script>
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script src="visualization.js"></script>
+		<script src="layoutStructure.js"></script>
+		<script src="busConnections.js"></script>
+		<script src="switching.js"></script>		
+		<style type="text/css">
+			td.selection {
+				width: 175px;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			td.graph {
+				width: 1160px;
+				margin-left: auto;
+				margin-right: auto;
+				border: 1px solid black;
+			}
+		</style>
+	</head>	
+<body onload="getNetwork()">
+	<table>
+		<tr>
+			<td class="selection">
+				<input type="radio" name="network" id="graph" value="graph" checked onchange="forceBased()">
+				<label for="graph">Network graph</label> <br />
+				<input type="radio" name="network" id="graphique" value="graphique" onchange="graphique()">
+				<label for="graphique">La method graphique</label> <br />
+				<input type="radio" name="network" id="circlegraph" value="circlegraph" onchange="circlegraph()">
+				<label for="circlegraph">Circle Graph</label> <br />
+			</td>			
+			<td class="graph">
+				<div id="graph">
+				</div>
+			</td>
+		
+		</tr>
+	</table>
+</body>
+</html>
