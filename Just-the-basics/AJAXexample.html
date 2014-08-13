@@ -1,0 +1,58 @@
+<html>	
+	<head>		
+		<title>SVG Data</title>		
+		<script src="http://d3js.org/d3.v3.min.js"></script>
+		<script>
+				var color = d3.scale.category10();
+				var width = 400;
+				var height = 400;
+				var vis;	
+				
+			function getData() {
+				if (window.XMLHttpRequest) { xmlhttp=new XMLHttpRequest(); }
+				else { xmlhttp=new ActiveXObject("Microsoft.XMLHTTP"); }
+				xmlhttp.onreadystatechange=function() {
+					if (xmlhttp.readyState==4 && xmlhttp.status==200) {
+						// Get the data
+						data = xmlhttp.responseText;
+						// Remove all whitespaces
+						data = data.replace(/\s/g, '');
+						// Make into an array
+						data = data.split(",");
+						// Send to D3
+						makeViz(data);
+					}
+				}
+				xmlhttp.open("GET","circle.csv",true);
+				xmlhttp.send();
+			}			
+				
+			function makeViz(circleData) {
+
+				vis = d3.select("div#visualization_here").append("svg:svg")
+					.attr("id", "SVGDisplay")
+					.attr("width", width)
+					.attr("height", height);
+					
+				newCircles = vis.selectAll("circle").data(circleData);
+	
+				newCircles.enter().append("circle")
+					.attr("cx", function(d) { return d*10; })
+					.attr("cy", function(d) { return d*10; })
+					.attr("r", function(d) { return d; })
+					.style("fill", function(d) { return color(d); })
+					.style("stroke-width", 0)
+					.style("stroke", "black")
+					.style("cursor", "pointer")
+					// on mouse-over, change the border of the given circle to 2
+					.on("mouseover", function() {d3.select(this).style("stroke-width", 2)})
+					// on mouse-out, change the border back to the original (0)
+					.on("mouseout", function() {d3.select(this).style("stroke-width", 0)});				
+			}
+			
+		</script>		
+	</head>		
+	<body onload="getData()">		
+		<div id="visualization_here"></div>	
+	</body>
+</html>
