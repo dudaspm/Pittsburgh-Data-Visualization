@@ -1,0 +1,50 @@
+<html>	
+	<head>		
+		<title>Bar Chart</title>		
+		<script src="http://d3js.org/d3.v3.min.js"></script>	
+		<script>
+		function barChart() {
+		var margin = {top: 20, right: 20, bottom: 30, left: 40},
+			width = 960 - margin.left - margin.right,
+			height = 500 - margin.top - margin.bottom;
+
+		//https://github.com/mbostock/d3/wiki/Ordinal-Scales#ordinal_rangeRoundBands	
+		var x = d3.scale.ordinal()
+			.rangeRoundBands([0, width], .1);
+		//https://github.com/mbostock/d3/wiki/Quantitative-Scales#linear_range
+		var y = d3.scale.linear()
+			.range([height, 0]);
+		
+		//https://github.com/mbostock/d3/wiki/SVG-Axes#_axis
+		var xAxis = d3.svg.axis()
+			.scale(x)
+			.orient("bottom");
+		//https://github.com/mbostock/d3/wiki/SVG-Axes#_axis
+		var yAxis = d3.svg.axis()
+			.scale(y)
+			.orient("left")
+			.ticks(10, "%");
+		
+		var svg = d3.select("div#barChart").append("svg")
+			.attr("width", width + margin.left + margin.right)
+			.attr("height", height + margin.top + margin.bottom)
+			.append("g")
+				.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+				
+		//https://github.com/mbostock/d3/wiki/CSV
+		
+		d3.tsv("data.tsv", type, function(error, data) {
+			x.domain(data.map(function(d) { return d.letter; }));
+			y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
+		});
+		function type(d) {
+			d.frequency = +d.frequency;
+			return d;
+		}
+		}
+		</script>		
+	</head>		
+	<body onload="barChart()">		
+		<div id="barChart"></div> 
+	</body>
+</html>
