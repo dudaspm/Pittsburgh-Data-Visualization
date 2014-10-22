@@ -1,0 +1,104 @@
+<html>	
+	<head>		
+		<title>SVG Data</title>		
+		<script src="http://d3js.org/d3.v3.min.js"></script>
+		<link rel="stylesheet" href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css">
+		<script src="http://code.jquery.com/jquery-1.10.2.js"></script>
+		<script src="http://code.jquery.com/ui/1.11.2/jquery-ui.js"></script>
+		<link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
+		<script>
+			$(function() {
+				$( document ).tooltip();
+			});		
+		
+		
+				var color = d3.scale.category10();
+				var circleData = [4, 5, 15, 16, 23, 30];
+				var width = 400;
+				var height = 400;
+				var vis;	
+				
+			function makeViz() {
+
+				vis = d3.select("div#visualization_here").append("svg:svg")
+					.attr("id", "SVGDisplay")
+					.attr("width", width)
+					.attr("height", height);
+					
+				newCircles = vis.selectAll("circle").data(circleData);
+	
+				//enter
+				newCircles.enter().append("circle")
+					.attr("cx", function(d) { return d*10; })
+					.attr("cy", function(d) { return d*10; })
+					.attr("r", function(d) { return d; })
+					.attr("title", function(d) { return d.toString(); })
+					.style("fill", function(d) { return color(d); })
+					.style("stroke-width", 0)
+					.style("stroke", "black")
+					.style("cursor", "pointer")
+					// on mouse-over, change the border of the given circle to 2
+					.on("mouseover", function() {d3.select(this).style("stroke-width", 2)})
+					// on mouse-out, change the border back to the original (0)
+					.on("mouseout", function() {d3.select(this).style("stroke-width", 0)})
+					//.on("click", function(d,i) { changeNodes(i); });		
+			}
+			
+			function changeNodes() {
+				// When an object is clicked, the index (i) is sent to the function
+				// .splice pops from the array at a given position
+				
+				circleData.shift();
+				circleData.push(Math.floor((Math.random() * 30) + 1))
+				var newerCircles = vis.selectAll("circle").data(circleData,function(d) { return d });	
+				
+				// Circles "pop" and are removed from the screen 
+				newerCircles.exit()
+                    .transition()
+                        .delay(Math.pow(1, 2.5) * 50)
+                        .duration(1000)
+                        .ease('quad-in')
+                    .attr("r", function(d) { return d*2; })
+                    .style("stroke-opacity", 0)
+					// waits until the animation is over and then runs the following
+                    .each("end", function () {
+						// removes the circle
+                        d3.select(this).remove();
+						newerCircles.enter().append("circle")
+							.attr("cx", function(d) { return d*10; })
+							.attr("cy", function(d) { return d*10; })
+							.attr("r", 0)
+							.attr("title", function(d) { return d.toString(); })
+							.style("fill", function(d) { return color(d); })
+							.style("stroke-width", 0)
+							.style("stroke", "black")
+							.style("cursor", "pointer")
+							// on mouse-over, change the border of the given circle to 2
+							.on("mouseover", function() {d3.select(this).style("stroke-width", 2)})
+							// on mouse-out, change the border back to the original (0)
+							.on("mouseout", function() {d3.select(this).style("stroke-width", 0)})	
+							.transition()
+							.delay(Math.pow(1, 2.5) * 50)
+							.duration(1000)
+							.ease('quad-in')
+							.attr("r", function(d) { return d; })
+                    });
+					
+				
+			}
+			
+			setInterval(function(){changeNodes()}, 3000);
+		</script>		
+		<style>
+			label {
+				display: inline-block;
+				width: 5em;
+			}
+		</style>		
+		
+		
+	</head>		
+	<body onload="makeViz()">		
+		<div id="visualization_here"></div>	
+	</body>
+</html>
