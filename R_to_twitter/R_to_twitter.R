@@ -1,5 +1,6 @@
 # Install dependencies
 install.packages(c("devtools", "rjson", "bit64", "httr"))
+# I suggest restarting R at this point
 
 # devtools will help with downloading from github
 library(devtools)
