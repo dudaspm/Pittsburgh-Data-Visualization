@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Transitions</title>
+	<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <style type="text/css">
+        html, body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body onload="createCircle()">
+	<div class="buildHere"></div>
+	<input type="button" value="Reset" onclick="reset()"></br>
+	<input type="button" value="Change Color" onclick="changeColor()"></br>
+	<input type="button" value="Delay" onclick="changeColorDelay()"></br>
+	<input type="button" value="Duration" onclick="changeColorDuration()"></br>
+	<input type="button" value="Tween 1" onclick="changeColorTween()"></br>
+	<input type="button" value="Tween 2" onclick="changeColorTween2()"></br>
+	<input type="button" value="Interrupted" onclick="interruptedTransitions()"></br>
+	<input type="button" value="Interrupted Fixed" onclick="interruptedTransitionsFixed()"></br>
+	<input type="button" value="Chaining" onclick="chaining()"></br>
+<script type="text/javascript">
+function createCircle() {
+	var width = 960,
+		height = 500;
+	var color = d3.scale.category10();
+
+	svg = d3.select("div.buildHere").append("svg")
+		.attr("width", width)
+		.attr("height", height);
+
+
+// Evaluate the interpolator
+
+	//enter
+	svg.append("circle")
+		.attr("class","changeMe")
+		.attr("cx", "50")
+		.attr("cy", "50")
+		.attr("r", "10")
+		.style("fill", "steelblue")
+		.style("stroke-width", 0)
+		.style("stroke", "black")
+		.style("cursor", "pointer")
+		// on mouse-over, change the border of the given circle to 2
+		.on("mouseover", function() {d3.select(this).style("stroke-width", 2)})
+		// on mouse-out, change the border back to the original (0)
+		.on("mouseout", function() {d3.select(this).style("stroke-width", 0)});
+}
+function reset() {d3.select("circle.changeMe").style("fill", "steelblue").attr("r", "10");} 
+function changeColor() {
+	d3.select("circle.changeMe")
+		.transition()
+		.style("fill", "#ff3d3d"); // then transition to red
+}
+
+function changeColorDelay() {
+	d3.select("circle.changeMe")
+		.transition()
+		.delay(2000)
+		.style("fill", "#ff3d3d");
+}
+
+function changeColorDuration() {
+	d3.select("circle.changeMe") 
+		.transition()
+		.duration(2000)
+		.style("fill", "#ff3d3d");
+}
+
+function changeColorTween() {
+	d3.select("circle.changeMe")
+		.transition()
+		.styleTween("fill", function() { return d3.interpolate("red", "blue"); });
+}
+
+function changeColorTween2(){
+	d3.select("circle.changeMe")
+		.transition()
+		.duration(2000)
+		.tween("fill", function() {
+			var ci = d3.interpolate('steelblue', '#BDF436');
+			return function(t) {
+				console.log(t);
+				this.style.fill = ci(t);
+			};
+		});
+}
+
+function interruptedTransitions() {
+	d3.select("circle.changeMe")
+		.transition()
+		.attr("r", "100");
+	d3.select("circle.changeMe")
+		.transition()
+		.style("fill", "#ff3d3d");
+}
+
+function interruptedTransitionsFixed() {
+	d3.select("circle.changeMe")
+		.transition("steve")
+		.attr("r", "100");
+	d3.select("circle.changeMe")
+		.transition("dave")
+		.style("fill", "#ff3d3d");
+}
+
+function chainging(){
+	d3.select("circle.changeMe")
+		.transition()
+		.duration(1000)
+		.attr("r", "100")
+		.each("end", function() {
+			d3.select("circle.changeMe")
+				.transition()
+				.duration(1000)
+				.attr("r", "10");
+		})
+}
+</script>
+
+</body>
+
+</html>
