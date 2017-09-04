@@ -25,7 +25,7 @@ function createLine () {
 			  "translate(" + margin.left + "," + margin.top + ")");
 
 	// Get the data
-	d3.json("/data/pwr.json", function(error, data) {
+	d3.json("data/pwr.json", function(error, data) {
 		if (error) throw error;
 		entries = data.nodes;
 		// format the data
