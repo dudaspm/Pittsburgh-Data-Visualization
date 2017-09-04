@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>graph</title>
+	<script src="//code.jquery.com/jquery-1.12.4.js"></script>
+	<script src="//d3js.org/d3.v4.min.js"></script>
+	<script src="//d3js.org/d3-color.v1.min.js"></script>
+	<script src="//d3js.org/d3-scale-chromatic.v1.min.js"></script>
+	<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script src="JS/createLine.js"></script>		
+	<script src="JS/changeValues.js"></script>	
+	<link href="//fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+	<style>
+			.line {
+			  fill: none;
+			  stroke: steelblue;
+			  stroke-width: 2px;
+			}
+			text,label,legend,body {
+				font-family: 'Lato', sans-serif;
+			
+			}
+			div{
+				width: 1000px;
+				margin: 0px auto;
+			}
+			table{
+				margin: 0px auto;
+			}
+	</style>
+</head>
+<body onload="createLine()">
+<div id="graph"></div>
+ <table style="width:800px">
+
+  <tr>
+    <td style="text-align:center;">
+		<input type="radio" name="pval" value="-2" onclick="changePval(.01)" checked> .01
+		<input type="radio" name="pval" value="-2" onclick="changePval(.05)"> .05
+		
+	</td>
+  </tr>
+  <tr>
+    <td style="text-align:center;">
+		<input type="radio" name="sample" value="-2" onclick="changeSample(10)" checked> 10
+		<input type="radio" name="sample" value="-2" onclick="changeSample(20)"> 20
+		<input type="radio" name="sample" value="-2" onclick="changeSample(30)"> 30
+		<input type="radio" name="sample" value="-2" onclick="changeSample(40)"> 40
+		
+	</td>
+  </tr>
+</table>
+</body>
+</html>
